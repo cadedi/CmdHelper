@@ -43,3 +43,6 @@ artifacts/
 
 # Rider
 *.sln.iml
+
+# AI Agent Instructions (Local only)
+AGENTS.md
