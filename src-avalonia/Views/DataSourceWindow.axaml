@@ -1,0 +1,112 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="using:LinuxCmdHelper.Models"
+        mc:Ignorable="d" d:DesignWidth="760" d:DesignHeight="560"
+        x:Class="LinuxCmdHelper.Views.DataSourceWindow"
+        Title="数据源管理与远程接口同步"
+        Width="780" Height="580"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackground}"
+        Foreground="{DynamicResource TextPrimary}">
+
+    <Window.Styles>
+        <Style Selector="Button.dialogPrimary">
+            <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+        <Style Selector="Button.dialogSecondary">
+            <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto, *, Auto, Auto" Margin="20">
+        <!-- 1. 头部说明 -->
+        <Border Grid.Row="0" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <StackPanel Spacing="4">
+                <TextBlock x:Name="TxtDlgTitle" Text="📡 多数据源 &amp; 远程 API 接口同步" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                <TextBlock x:Name="TxtDlgDesc" Text="支持配置多个远程 HTTP/HTTPS 接口或本地 JSON 文件。可选用【智能去重合并 (按 ID 覆盖旧项)】或【完全替代】，支持离线断网自动缓存。" FontSize="12" Foreground="{DynamicResource TextSecondary}" LineHeight="18" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 2. 数据源列表 -->
+        <Border Grid.Row="1" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,16">
+            <Grid RowDefinitions="Auto, *">
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="4,0,4,8">
+                    <TextBlock x:Name="TxtListTitle" Grid.Column="0" Text="已配置的数据源列表" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="TxtSourceCount" Grid.Column="1" Text="共 0 个数据源" FontSize="12" Foreground="{DynamicResource TextMuted}" VerticalAlignment="Center"/>
+                </Grid>
+
+                <ListBox x:Name="LstDataSources" Grid.Row="1" Background="Transparent" BorderThickness="0">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,0,0,6"/>
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="models:DataSourceConfig">
+                            <Border Background="{DynamicResource SidebarBackground}" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1" CornerRadius="6" Padding="12,8">
+                                <Grid ColumnDefinitions="Auto, *, Auto">
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding Enabled}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource TextPrimary}"/>
+                                            <Border Background="{DynamicResource ActiveItemBg}" CornerRadius="4" Padding="6,1">
+                                                <TextBlock Text="{Binding MergeMode}" FontSize="10" Foreground="{DynamicResource AccentColor}" FontWeight="SemiBold"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding Url}" FontSize="11" FontFamily="Cascadia Code, Consolas, Courier New" Foreground="{DynamicResource TextMuted}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding LastStatus}" FontSize="11" Foreground="#059669"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="2" Content="删除" Tag="{Binding Id}" Classes="dialogSecondary" Click="BtnDeleteSource_Click" VerticalAlignment="Center" Padding="8,4"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- 3. 添加表单 -->
+        <Border Grid.Row="2" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <StackPanel Spacing="10">
+                <TextBlock x:Name="TxtAddHeader" Text="添加新的数据源 / 接口" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                <Grid ColumnDefinitions="140, *, 170, Auto">
+                    <TextBox x:Name="TxtNewName" Grid.Column="0" Text="公司内网接口" Height="36" Margin="0,0,8,0" VerticalContentAlignment="Center"/>
+                    <TextBox x:Name="TxtNewUrl" Grid.Column="1" Text="https://api.example.com/commands.json" Height="36" Margin="0,0,8,0" VerticalContentAlignment="Center"/>
+                    <ComboBox x:Name="CmbMergeMode" Grid.Column="2" Height="36" Margin="0,0,8,0" SelectedIndex="0" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="智能去重合并 (merge)" Tag="merge"/>
+                        <ComboBoxItem Content="完全覆盖替代 (replace)" Tag="replace"/>
+                    </ComboBox>
+                    <Button x:Name="BtnAddSource" Grid.Column="3" Content="➕ 添加数据源" Classes="dialogPrimary" Height="36"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- 4. 底部操作栏 -->
+        <Grid Grid.Row="3" ColumnDefinitions="*, Auto">
+            <TextBlock x:Name="TxtSyncStatus" Grid.Column="0" Text="" FontSize="12" Foreground="{DynamicResource AccentColor}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                <Button x:Name="BtnSyncNow" Content="🔄 立即测试并同步全部数据源" Classes="dialogPrimary"/>
+                <Button x:Name="BtnClose" Content="完成并关闭" Classes="dialogSecondary" Width="90"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

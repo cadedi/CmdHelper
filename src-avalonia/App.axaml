@@ -1,0 +1,68 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:LinuxCmdHelper"
+             x:Class="LinuxCmdHelper.App"
+             RequestedThemeVariant="Light">
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <!-- 浅色模式主题资源 (#EEEEEE) -->
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppBackground">#EEEEEE</SolidColorBrush>
+                    <SolidColorBrush x:Key="HeaderBackground">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="CardBackground">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="SidebarBackground">#F3F4F6</SolidColorBrush>
+                    <SolidColorBrush x:Key="BorderColor">#D1D5DB</SolidColorBrush>
+                    <SolidColorBrush x:Key="BorderSubtle">#E5E7EB</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextPrimary">#111827</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextSecondary">#4B5563</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextMuted">#6B7280</SolidColorBrush>
+                    <SolidColorBrush x:Key="AccentColor">#0284C7</SolidColorBrush>
+                    <SolidColorBrush x:Key="AccentHover">#0369A1</SolidColorBrush>
+                    <SolidColorBrush x:Key="ActiveItemBg">#E0F2FE</SolidColorBrush>
+                    <SolidColorBrush x:Key="ActiveItemBorder">#0284C7</SolidColorBrush>
+                    <SolidColorBrush x:Key="CodeBg">#F8FAFC</SolidColorBrush>
+                    <SolidColorBrush x:Key="CodeText">#0369A1</SolidColorBrush>
+                    <SolidColorBrush x:Key="InputBackground">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="DangerBg">#FEE2E2</SolidColorBrush>
+                    <SolidColorBrush x:Key="DangerBorder">#F87171</SolidColorBrush>
+                    <SolidColorBrush x:Key="DangerText">#DC2626</SolidColorBrush>
+                    <SolidColorBrush x:Key="WarningBg">#FEF3C7</SolidColorBrush>
+                    <SolidColorBrush x:Key="WarningBorder">#FBBF24</SolidColorBrush>
+                    <SolidColorBrush x:Key="WarningText">#D97706</SolidColorBrush>
+                </ResourceDictionary>
+
+                <!-- 深色模式主题资源 -->
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppBackground">#18181B</SolidColorBrush>
+                    <SolidColorBrush x:Key="HeaderBackground">#27272A</SolidColorBrush>
+                    <SolidColorBrush x:Key="CardBackground">#27272A</SolidColorBrush>
+                    <SolidColorBrush x:Key="SidebarBackground">#202023</SolidColorBrush>
+                    <SolidColorBrush x:Key="BorderColor">#3F3F46</SolidColorBrush>
+                    <SolidColorBrush x:Key="BorderSubtle">#3F3F46</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextPrimary">#F4F4F5</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextSecondary">#D4D4D8</SolidColorBrush>
+                    <SolidColorBrush x:Key="TextMuted">#A1A1AA</SolidColorBrush>
+                    <SolidColorBrush x:Key="AccentColor">#38BDF8</SolidColorBrush>
+                    <SolidColorBrush x:Key="AccentHover">#0284C7</SolidColorBrush>
+                    <SolidColorBrush x:Key="ActiveItemBg">#1E293B</SolidColorBrush>
+                    <SolidColorBrush x:Key="ActiveItemBorder">#38BDF8</SolidColorBrush>
+                    <SolidColorBrush x:Key="CodeBg">#09090B</SolidColorBrush>
+                    <SolidColorBrush x:Key="CodeText">#38BDF8</SolidColorBrush>
+                    <SolidColorBrush x:Key="InputBackground">#18181B</SolidColorBrush>
+                    <SolidColorBrush x:Key="DangerBg">#450A0A</SolidColorBrush>
+                    <SolidColorBrush x:Key="DangerBorder">#991B1B</SolidColorBrush>
+                    <SolidColorBrush x:Key="DangerText">#FCA5A5</SolidColorBrush>
+                    <SolidColorBrush x:Key="WarningBg">#451A03</SolidColorBrush>
+                    <SolidColorBrush x:Key="WarningBorder">#92400E</SolidColorBrush>
+                    <SolidColorBrush x:Key="WarningText">#FCD34D</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

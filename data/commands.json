@@ -1,0 +1,1218 @@
+[
+  {
+    "id": "tar_compress",
+    "category": "Linux 运维",
+    "title": "归档并压缩指定文件或目录",
+    "desc": "使用 tar 打包并选用 gzip/bzip2/xz 压缩算法生成压缩归档文件",
+    "template": "tar -c{compress_opt}vf {archive_name} {target_path}",
+    "params": [
+      {
+        "key": "compress_opt",
+        "label": "压缩算法",
+        "type": "select",
+        "default": "z",
+        "options": [
+          { "label": "gzip (速度快, 后缀 .tar.gz)", "value": "z" },
+          { "label": "bzip2 (压缩率高, 后缀 .tar.bz2)", "value": "j" },
+          { "label": "xz (极致压缩率, 后缀 .tar.xz)", "value": "J" }
+        ]
+      },
+      {
+        "key": "archive_name",
+        "label": "输出归档文件名",
+        "type": "text",
+        "default": "app-service.log.tar.gz",
+        "placeholder": "app-service.log.tar.gz"
+      },
+      {
+        "key": "target_path",
+        "label": "待压缩的文件或目录",
+        "type": "text",
+        "default": "app-service.log",
+        "placeholder": "app-service.log"
+      }
+    ],
+    "example": "tar -czvf app-service.log.tar.gz app-service.log",
+    "dangerLevel": "normal",
+    "tags": ["linux", "tar", "compress", "zip", "gzip", "打包", "压缩", "归档"]
+  },
+  {
+    "id": "tar_max_compress",
+    "category": "Linux 运维",
+    "title": "以最高压缩比归档目录 (GZIP=-9)",
+    "desc": "指定环境变量 GZIP=-9 启用最大压缩级别对目录进行归档压缩",
+    "template": "GZIP=-9 tar -czvf {archive_name} {target_dir}/",
+    "params": [
+      {
+        "key": "archive_name",
+        "label": "输出压缩包名称",
+        "type": "text",
+        "default": "app-logs-2026.tar.gz",
+        "placeholder": "app-logs-2026.tar.gz"
+      },
+      {
+        "key": "target_dir",
+        "label": "源目录路径",
+        "type": "text",
+        "default": "logs_backup",
+        "placeholder": "logs_backup"
+      }
+    ],
+    "example": "GZIP=-9 tar -czvf app-logs-2026.tar.gz logs_backup/",
+    "dangerLevel": "normal",
+    "tags": ["linux", "tar", "gzip", "最大压缩", "归档"]
+  },
+  {
+    "id": "tar_extract",
+    "category": "Linux 运维",
+    "title": "解压 tar 归档文件到指定目录",
+    "desc": "自动解压 .tar.gz / .tar.bz2 / .tar.xz / .tar 文件到指定目标目录",
+    "template": "tar -xvf {archive_file}{target_dir_opt}",
+    "params": [
+      {
+        "key": "archive_file",
+        "label": "压缩包路径",
+        "type": "text",
+        "default": "app_release.tar.gz",
+        "placeholder": "app_release.tar.gz"
+      },
+      {
+        "key": "use_custom_dir",
+        "label": "指定解压目标目录",
+        "type": "checkbox",
+        "default": true
+      },
+      {
+        "key": "target_dir",
+        "label": "解压目标目录",
+        "type": "text",
+        "default": "/opt/app",
+        "placeholder": "/opt/app"
+      }
+    ],
+    "example": "tar -xvf app_release.tar.gz -C /opt/app",
+    "dangerLevel": "normal",
+    "tags": ["linux", "tar", "extract", "untar", "解压", "解包"]
+  },
+  {
+    "id": "zgrep_count",
+    "category": "Linux 运维",
+    "title": "在压缩日志包中搜索关键字并统计行数",
+    "desc": "无需解压直接在 .gz 压缩日志中检索关键词并计算匹配总行数",
+    "template": "zgrep '{keyword}' {log_pattern} | wc -l",
+    "params": [
+      {
+        "key": "keyword",
+        "label": "搜索关键词",
+        "type": "text",
+        "default": "ERROR",
+        "placeholder": "ERROR / Exception"
+      },
+      {
+        "key": "log_pattern",
+        "label": "压缩日志匹配路径",
+        "type": "text",
+        "default": "*.log.gz",
+        "placeholder": "*.log.gz"
+      }
+    ],
+    "example": "zgrep 'ERROR' *.log.gz | wc -l",
+    "dangerLevel": "normal",
+    "tags": ["linux", "zgrep", "log", "统计", "压缩日志", "排障"]
+  },
+  {
+    "id": "find_and_move",
+    "category": "Linux 运维",
+    "title": "按文件名模式查找并批量移动到指定目录",
+    "desc": "递归或单层查找匹配特定名称模式的文件并执行批量 mv 归档",
+    "template": "mkdir -p {dest_dir} && find {search_dir} -maxdepth {max_depth} -name '{file_pattern}' -type f -exec mv {{}} {dest_dir}/ \\;",
+    "params": [
+      {
+        "key": "search_dir",
+        "label": "搜索起始目录",
+        "type": "text",
+        "default": ".",
+        "placeholder": "."
+      },
+      {
+        "key": "max_depth",
+        "label": "最大搜索深度",
+        "type": "text",
+        "default": "1",
+        "placeholder": "1"
+      },
+      {
+        "key": "file_pattern",
+        "label": "文件名匹配通配符",
+        "type": "text",
+        "default": "*2026-01*",
+        "placeholder": "*2026-01*"
+      },
+      {
+        "key": "dest_dir",
+        "label": "目标归档目录",
+        "type": "text",
+        "default": "archived_logs",
+        "placeholder": "archived_logs"
+      }
+    ],
+    "example": "mkdir -p archived_logs && find . -maxdepth 1 -name '*2026-01*' -type f -exec mv {} archived_logs/ \\;",
+    "dangerLevel": "normal",
+    "tags": ["linux", "find", "mv", "批量移动", "归档", "文件管理"]
+  },
+  {
+    "id": "lsof_port",
+    "category": "Linux 运维",
+    "title": "查看指定端口被哪个进程占用 (获取 PID)",
+    "desc": "使用 lsof 命令快速定位监听特定网络端口的进程名及 PID",
+    "template": "lsof -i :{port_num}",
+    "params": [
+      {
+        "key": "port_num",
+        "label": "端口号",
+        "type": "text",
+        "default": "8080",
+        "placeholder": "8080"
+      }
+    ],
+    "example": "lsof -i :8080",
+    "dangerLevel": "normal",
+    "tags": ["linux", "lsof", "port", "端口", "网络", "进程排查"]
+  },
+  {
+    "id": "tail_grep_log",
+    "category": "Linux 运维",
+    "title": "实时监控日志并按关键字高亮过滤",
+    "desc": "动态追踪日志文件追加内容，并通过 grep 实时筛选包含特定关键字的行",
+    "template": "tail -{lines}f {log_file} | grep --line-buffered --color=auto -E '{keyword}'",
+    "params": [
+      {
+        "key": "log_file",
+        "label": "日志文件路径",
+        "type": "text",
+        "default": "/opt/app/logs/server.log",
+        "placeholder": "/path/to/server.log"
+      },
+      {
+        "key": "lines",
+        "label": "初始展示末尾行数",
+        "type": "text",
+        "default": "200",
+        "placeholder": "200"
+      },
+      {
+        "key": "keyword",
+        "label": "过滤关键字 (支持正则表达式)",
+        "type": "text",
+        "default": "ERROR|Exception",
+        "placeholder": "ERROR|WARN"
+      }
+    ],
+    "example": "tail -200f /opt/app/logs/server.log | grep --line-buffered --color=auto -E 'ERROR|Exception'",
+    "dangerLevel": "normal",
+    "tags": ["linux", "tail", "grep", "log", "日志", "实时监控", "排错"]
+  },
+  {
+    "id": "yum_download_rpm",
+    "category": "Linux 运维",
+    "title": "离线环境 RPM 依赖包一键下载",
+    "desc": "在联网机器上仅下载软件包及其全部未安装依赖为离线 RPM 文件",
+    "template": "sudo yum install --downloadonly --downloaddir={download_dir} {package_name}",
+    "params": [
+      {
+        "key": "download_dir",
+        "label": "RPM 存储目录",
+        "type": "text",
+        "default": "./rpm_packages",
+        "placeholder": "./rpm_packages"
+      },
+      {
+        "key": "package_name",
+        "label": "软件包名 (可指定版本)",
+        "type": "text",
+        "default": "nginx",
+        "placeholder": "nginx / postgresql14-server"
+      }
+    ],
+    "example": "sudo yum install --downloadonly --downloaddir=./rpm_packages nginx",
+    "dangerLevel": "normal",
+    "tags": ["linux", "yum", "rpm", "离线部署", "依赖下载"]
+  },
+  {
+    "id": "rpm_force_install",
+    "category": "Linux 运维",
+    "title": "离线批量安装/升级 RPM 包 (无视依赖顺序)",
+    "desc": "在内网或离线环境中强制安装当前目录下的所有 RPM 软件包",
+    "template": "rpm -{mode}vh ./*.rpm --nodeps --force",
+    "params": [
+      {
+        "key": "mode",
+        "label": "操作模式",
+        "type": "select",
+        "default": "i",
+        "options": [
+          { "label": "首次安装 (-ivh)", "value": "i" },
+          { "label": "版本升级 (-Uvh)", "value": "U" }
+        ]
+      }
+    ],
+    "example": "rpm -ivh ./*.rpm --nodeps --force",
+    "dangerLevel": "normal",
+    "tags": ["linux", "rpm", "离线安装", "升级"]
+  },
+  {
+    "id": "firewall_forward_port",
+    "category": "Linux 运维",
+    "title": "Firewalld 本地端口转发与流量重定向",
+    "desc": "在防火墙中配置本地端口到目标服务端口的 TCP 流量转发规则",
+    "template": "firewall-cmd --permanent --zone=public --add-forward-port=port={local_port}:proto=tcp:toport={dest_port} && firewall-cmd --reload",
+    "params": [
+      {
+        "key": "local_port",
+        "label": "入口外部端口",
+        "type": "text",
+        "default": "18080",
+        "placeholder": "18080"
+      },
+      {
+        "key": "dest_port",
+        "label": "目标实际服务端口",
+        "type": "text",
+        "default": "8080",
+        "placeholder": "8080"
+      }
+    ],
+    "example": "firewall-cmd --permanent --zone=public --add-forward-port=port=18080:proto=tcp:toport=8080 && firewall-cmd --reload",
+    "dangerLevel": "normal",
+    "tags": ["linux", "firewall", "firewalld", "端口转发", "网络"]
+  },
+  {
+    "id": "systemd_service_ctl",
+    "category": "Linux 运维",
+    "title": "Systemd 服务热重载并设置开机自启立即运行",
+    "desc": "修改自定义 .service 文件后重新加载守护进程并立即启动服务",
+    "template": "systemctl daemon-reload && systemctl enable --now {service_name}",
+    "params": [
+      {
+        "key": "service_name",
+        "label": "服务单元名称",
+        "type": "text",
+        "default": "app-service",
+        "placeholder": "app-service"
+      }
+    ],
+    "example": "systemctl daemon-reload && systemctl enable --now app-service",
+    "dangerLevel": "normal",
+    "tags": ["linux", "systemd", "systemctl", "自启动", "服务注册"]
+  },
+  {
+    "id": "disk_large_file_rank",
+    "category": "Linux 运维",
+    "title": "分析当前目录下最大目录及大文件排行",
+    "desc": "统计当前路径下各子目录磁盘占用并按文件体积从大到小排序",
+    "template": "du -sh {target_path}/* 2>/dev/null | sort -hr | head -n {top_n}",
+    "params": [
+      {
+        "key": "target_path",
+        "label": "目标路径",
+        "type": "text",
+        "default": "/var/log",
+        "placeholder": "/var/log"
+      },
+      {
+        "key": "top_n",
+        "label": "显示前 N 条",
+        "type": "text",
+        "default": "10",
+        "placeholder": "10"
+      }
+    ],
+    "example": "du -sh /var/log/* 2>/dev/null | sort -hr | head -n 10",
+    "dangerLevel": "normal",
+    "tags": ["linux", "du", "sort", "disk", "磁盘清理", "空间占用"]
+  },
+
+  {
+    "id": "jvm_heap_stat",
+    "category": "Java 性能与 JVM",
+    "title": "查询 Java 进程堆内存配置与各代使用率",
+    "desc": "使用 jmap 查看指定 Java 进程的堆配置、新生代/老年代占用情况",
+    "template": "jmap -heap {pid}",
+    "params": [
+      {
+        "key": "pid",
+        "label": "Java 进程 PID",
+        "type": "text",
+        "default": "1024",
+        "placeholder": "1024"
+      }
+    ],
+    "example": "jmap -heap 1024",
+    "dangerLevel": "normal",
+    "tags": ["java", "jvm", "jmap", "heap", "内存排查", "性能"]
+  },
+  {
+    "id": "jvm_dump_hprof",
+    "category": "Java 性能与 JVM",
+    "title": "生成 Java 进程存活对象堆转储快照 (Heap Dump)",
+    "desc": "在 OOM 或内存泄漏排查时，导出当前 Java 进程的二进制 .hprof 堆快照",
+    "template": "jmap -dump:live,format=b,file={dump_file} {pid}",
+    "params": [
+      {
+        "key": "dump_file",
+        "label": "导出文件路径",
+        "type": "text",
+        "default": "heap-dump.hprof",
+        "placeholder": "heap-dump.hprof"
+      },
+      {
+        "key": "pid",
+        "label": "Java 进程 PID",
+        "type": "text",
+        "default": "1024",
+        "placeholder": "1024"
+      }
+    ],
+    "example": "jmap -dump:live,format=b,file=heap-dump.hprof 1024",
+    "dangerLevel": "normal",
+    "tags": ["java", "jvm", "jmap", "hprof", "dump", "OOM", "内存泄漏"]
+  },
+  {
+    "id": "jvm_arthas_attach",
+    "category": "Java 性能与 JVM",
+    "title": "启动 Arthas 在线排查诊断终端",
+    "desc": "下载并快速启动 Alibaba Arthas 交互式诊断工具挂载到目标 JVM",
+    "template": "java -jar arthas-boot.jar",
+    "params": [],
+    "example": "java -jar arthas-boot.jar",
+    "dangerLevel": "normal",
+    "tags": ["java", "arthas", "jvm", "诊断", "方法耗时", "热修复"]
+  },
+
+  {
+    "id": "pg_dump_custom_backup",
+    "category": "SQL 数据库",
+    "title": "PostgreSQL 自定义格式压缩备份数据库/表",
+    "desc": "使用 pg_dump 导出为 -Fc 自定义归档压缩格式，支持后续多线程并发恢复",
+    "template": "pg_dump -Fc -U {username} -h {host} -p {port} -d {dbname} --clean --if-exists --no-owner --no-privileges -f {output_file}",
+    "params": [
+      {
+        "key": "username",
+        "label": "数据库用户名",
+        "type": "text",
+        "default": "postgres",
+        "placeholder": "postgres"
+      },
+      {
+        "key": "host",
+        "label": "主机地址",
+        "type": "text",
+        "default": "127.0.0.1",
+        "placeholder": "127.0.0.1"
+      },
+      {
+        "key": "port",
+        "label": "端口号",
+        "type": "text",
+        "default": "5432",
+        "placeholder": "5432"
+      },
+      {
+        "key": "dbname",
+        "label": "数据库名称",
+        "type": "text",
+        "default": "demo_db",
+        "placeholder": "demo_db"
+      },
+      {
+        "key": "output_file",
+        "label": "输出备份文件路径",
+        "type": "text",
+        "default": "backup_demo_db.dump",
+        "placeholder": "backup.dump"
+      }
+    ],
+    "example": "pg_dump -Fc -U postgres -h 127.0.0.1 -p 5432 -d demo_db --clean --if-exists --no-owner --no-privileges -f backup_demo_db.dump",
+    "dangerLevel": "normal",
+    "tags": ["sql", "postgresql", "pg_dump", "备份", "数据库"]
+  },
+  {
+    "id": "pg_restore_parallel",
+    "category": "SQL 数据库",
+    "title": "PostgreSQL 多进程并发极速恢复数据库",
+    "desc": "使用 pg_restore 指定多 CPU 核心并发恢复自定义归档格式备份文件",
+    "template": "pg_restore -j {jobs} -v -U {username} -h {host} -p {port} -d {dbname} --no-owner --no-privileges {dump_file}",
+    "params": [
+      {
+        "key": "jobs",
+        "label": "并发进程数",
+        "type": "text",
+        "default": "4",
+        "placeholder": "4"
+      },
+      {
+        "key": "username",
+        "label": "数据库用户名",
+        "type": "text",
+        "default": "postgres",
+        "placeholder": "postgres"
+      },
+      {
+        "key": "host",
+        "label": "主机地址",
+        "type": "text",
+        "default": "127.0.0.1",
+        "placeholder": "127.0.0.1"
+      },
+      {
+        "key": "port",
+        "label": "端口号",
+        "type": "text",
+        "default": "5432",
+        "placeholder": "5432"
+      },
+      {
+        "key": "dbname",
+        "label": "目标数据库",
+        "type": "text",
+        "default": "demo_db",
+        "placeholder": "demo_db"
+      },
+      {
+        "key": "dump_file",
+        "label": "备份文件路径",
+        "type": "text",
+        "default": "backup_demo_db.dump",
+        "placeholder": "backup_demo_db.dump"
+      }
+    ],
+    "example": "pg_restore -j 4 -v -U postgres -h 127.0.0.1 -p 5432 -d demo_db --no-owner --no-privileges backup_demo_db.dump",
+    "dangerLevel": "normal",
+    "tags": ["sql", "postgresql", "pg_restore", "恢复", "并行"]
+  },
+  {
+    "id": "pg_basebackup_standby",
+    "category": "SQL 数据库",
+    "title": "PostgreSQL 主从流复制备库基础初始化 (pg_basebackup)",
+    "desc": "从主节点拉取完整数据目录初始化流复制从库，带实时进度展示",
+    "template": "pg_basebackup -D {data_dir} -h {master_ip} -p {port} -U {replica_user} -Fp -Xs -P -R -c fast",
+    "params": [
+      {
+        "key": "data_dir",
+        "label": "从库数据目录",
+        "type": "text",
+        "default": "/var/lib/pgsql/14/data",
+        "placeholder": "/var/lib/pgsql/14/data"
+      },
+      {
+        "key": "master_ip",
+        "label": "主库 IP 地址",
+        "type": "text",
+        "default": "192.168.1.100",
+        "placeholder": "192.168.1.100"
+      },
+      {
+        "key": "port",
+        "label": "主库端口号",
+        "type": "text",
+        "default": "5432",
+        "placeholder": "5432"
+      },
+      {
+        "key": "replica_user",
+        "label": "复制账号",
+        "type": "text",
+        "default": "replica",
+        "placeholder": "replica"
+      }
+    ],
+    "example": "pg_basebackup -D /var/lib/pgsql/14/data -h 192.168.1.100 -p 5432 -U replica -Fp -Xs -P -R -c fast",
+    "dangerLevel": "normal",
+    "tags": ["sql", "postgresql", "pg_basebackup", "主从复制", "高可用", "流复制"]
+  },
+  {
+    "id": "pg_slow_query_stat",
+    "category": "SQL 数据库",
+    "title": "PostgreSQL 排查正在运行的慢查询与耗时",
+    "desc": "查询 pg_stat_activity 视图中当前执行超过指定时长的活跃查询语句",
+    "template": "SELECT pid, now() - query_start AS duration, query, state FROM pg_stat_activity WHERE state != 'idle' AND (now() - query_start) > interval '{seconds} seconds' ORDER BY duration DESC;",
+    "params": [
+      {
+        "key": "seconds",
+        "label": "耗时阈值 (秒)",
+        "type": "text",
+        "default": "5",
+        "placeholder": "5"
+      }
+    ],
+    "example": "SELECT pid, now() - query_start AS duration, query, state FROM pg_stat_activity WHERE state != 'idle' AND (now() - query_start) > interval '5 seconds' ORDER BY duration DESC;",
+    "dangerLevel": "normal",
+    "tags": ["sql", "postgresql", "慢查询", "pg_stat_activity", "性能排查"]
+  },
+  {
+    "id": "pg_lock_blocking_chain",
+    "category": "SQL 数据库",
+    "title": "PostgreSQL 锁等待与阻塞链分析",
+    "desc": "查询当前产生锁冲突的阻塞会话 (Blocking PID) 与被阻塞会话 (Blocked PID)",
+    "template": "SELECT blocking.pid AS blocking_pid, blocking.query AS blocking_query, blocked.pid AS blocked_pid, blocked.query AS blocked_query FROM pg_stat_activity blocked JOIN pg_stat_activity blocking ON blocking.pid = ANY(pg_blocking_pids(blocked.pid)) WHERE cardinality(pg_blocking_pids(blocked.pid)) > 0;",
+    "params": [],
+    "example": "SELECT blocking.pid AS blocking_pid, blocking.query AS blocking_query, blocked.pid AS blocked_pid, blocked.query AS blocked_query FROM pg_stat_activity blocked JOIN pg_stat_activity blocking ON blocking.pid = ANY(pg_blocking_pids(blocked.pid)) WHERE cardinality(pg_blocking_pids(blocked.pid)) > 0;",
+    "dangerLevel": "normal",
+    "tags": ["sql", "postgresql", "锁冲突", "死锁", "阻塞排查"]
+  },
+  {
+    "id": "pg_table_bloat_dead_tuple",
+    "category": "SQL 数据库",
+    "title": "PostgreSQL 表膨胀率与死元组 (Dead Tuples) 排查",
+    "desc": "检查各数据表的存活行数、死元组数量与膨胀百分比，定位需要 VACUUM 的大表",
+    "template": "SELECT relname, n_dead_tup, n_live_tup, round(n_dead_tup::numeric / nullif(n_live_tup + n_dead_tup, 0) * 100, 2) AS dead_ratio, last_vacuum, last_autovacuum FROM pg_stat_user_tables WHERE n_live_tup > 0 ORDER BY dead_ratio DESC LIMIT {limit_n};",
+    "params": [
+      {
+        "key": "limit_n",
+        "label": "显示前 N 张表",
+        "type": "text",
+        "default": "15",
+        "placeholder": "15"
+      }
+    ],
+    "example": "SELECT relname, n_dead_tup, n_live_tup, round(n_dead_tup::numeric / nullif(n_live_tup + n_dead_tup, 0) * 100, 2) AS dead_ratio, last_vacuum, last_autovacuum FROM pg_stat_user_tables WHERE n_live_tup > 0 ORDER BY dead_ratio DESC LIMIT 15;",
+    "dangerLevel": "normal",
+    "tags": ["sql", "postgresql", "表膨胀", "vacuum", "死元组", "运维优化"]
+  },
+  {
+    "id": "pg_explain_analyze_buffers",
+    "category": "SQL 数据库",
+    "title": "PostgreSQL 深度执行计划分析 (EXPLAIN ANALYZE BUFFERS)",
+    "desc": "输出包含真实执行时间、缓冲区命中美/读情况及扫描模式的完整执行计划",
+    "template": "EXPLAIN (ANALYZE, BUFFERS, VERBOSE, FORMAT TEXT)\n{sql_query};",
+    "params": [
+      {
+        "key": "sql_query",
+        "label": "待分析的 SQL 查询",
+        "type": "text",
+        "default": "SELECT * FROM user_order WHERE user_id = 10086",
+        "placeholder": "SELECT * FROM my_table WHERE ..."
+      }
+    ],
+    "example": "EXPLAIN (ANALYZE, BUFFERS, VERBOSE, FORMAT TEXT)\nSELECT * FROM user_order WHERE user_id = 10086;",
+    "dangerLevel": "normal",
+    "tags": ["sql", "postgresql", "explain", "执行计划", "索引优化", "性能调优"]
+  },
+  {
+    "id": "mysql_slow_query",
+    "category": "SQL 数据库",
+    "title": "MySQL 排查当前执行时间过长的慢查询与锁表",
+    "desc": "查询 Processlist 中耗时超过指定秒数的活动线程与执行 SQL",
+    "template": "SELECT id, user, host, db, command, time, state, info FROM information_schema.processlist WHERE command != 'Sleep' AND time >= {min_seconds} ORDER BY time DESC;",
+    "params": [
+      {
+        "key": "min_seconds",
+        "label": "执行耗时阈值 (秒)",
+        "type": "text",
+        "default": "10",
+        "placeholder": "10"
+      }
+    ],
+    "example": "SELECT id, user, host, db, command, time, state, info FROM information_schema.processlist WHERE command != 'Sleep' AND time >= 10 ORDER BY time DESC;",
+    "dangerLevel": "normal",
+    "tags": ["mysql", "sql", "慢查询", "processlist", "性能排查"]
+  },
+  {
+    "id": "mysql_kill_process",
+    "category": "SQL 数据库",
+    "title": "MySQL 强制终止锁表或卡死查询线程",
+    "desc": "使用 KILL 命令强行中断指定 Processlist ID 的数据库连接线程",
+    "template": "KILL {process_id};",
+    "params": [
+      {
+        "key": "process_id",
+        "label": "线程 ID (Processlist ID)",
+        "type": "text",
+        "default": "12345",
+        "placeholder": "12345"
+      }
+    ],
+    "example": "KILL 12345;",
+    "dangerLevel": "danger",
+    "tags": ["mysql", "kill", "锁表", "应急处理"]
+  },
+  {
+    "id": "mysql_table_size_rank",
+    "category": "SQL 数据库",
+    "title": "MySQL 查看各数据表容量与索引占用排行榜",
+    "desc": "计算指定库下每张表的数据大小 (MB) 与索引大小并降序排列",
+    "template": "SELECT table_name AS `Table`, ROUND(((data_length + index_length) / 1024 / 1024), 2) `Total (MB)`, ROUND((data_length / 1024 / 1024), 2) `Data (MB)`, ROUND((index_length / 1024 / 1024), 2) `Index (MB)`, table_rows `Rows` FROM information_schema.TABLES WHERE table_schema = '{db_name}' ORDER BY (data_length + index_length) DESC LIMIT {limit_num};",
+    "params": [
+      {
+        "key": "db_name",
+        "label": "数据库库名",
+        "type": "text",
+        "default": "demo_db",
+        "placeholder": "demo_db"
+      },
+      {
+        "key": "limit_num",
+        "label": "排行展示前 N 名",
+        "type": "text",
+        "default": "20",
+        "placeholder": "20"
+      }
+    ],
+    "example": "SELECT table_name AS `Table`, ROUND(((data_length + index_length) / 1024 / 1024), 2) `Total (MB)`, ROUND((data_length / 1024 / 1024), 2) `Data (MB)`, ROUND((index_length / 1024 / 1024), 2) `Index (MB)`, table_rows `Rows` FROM information_schema.TABLES WHERE table_schema = 'demo_db' ORDER BY (data_length + index_length) DESC LIMIT 20;",
+    "dangerLevel": "normal",
+    "tags": ["mysql", "sql", "table_size", "磁盘分析", "大表分析"]
+  },
+  {
+    "id": "sql_find_duplicates",
+    "category": "SQL 数据库",
+    "title": "检测某字段重复值并带出全部重复记录详情",
+    "desc": "利用窗口函数 COUNT(*) OVER (PARTITION BY ...) 查出存在重复键的所有行",
+    "template": "SELECT * FROM (\n  SELECT *, COUNT(*) OVER (PARTITION BY {col_name}) as dup_count\n  FROM {table_name}\n) t WHERE t.dup_count > 1 ORDER BY t.dup_count DESC, {col_name};",
+    "params": [
+      {
+        "key": "table_name",
+        "label": "数据表名",
+        "type": "text",
+        "default": "user_account",
+        "placeholder": "user_account"
+      },
+      {
+        "key": "col_name",
+        "label": "待检查的重复字段名",
+        "type": "text",
+        "default": "phone_number",
+        "placeholder": "phone_number"
+      }
+    ],
+    "example": "SELECT * FROM (\n  SELECT *, COUNT(*) OVER (PARTITION BY phone_number) as dup_count\n  FROM user_account\n) t WHERE t.dup_count > 1 ORDER BY t.dup_count DESC, phone_number;",
+    "dangerLevel": "normal",
+    "tags": ["sql", "重复数据", "数据清洗", "窗口函数"]
+  },
+
+  {
+    "id": "docker_save_load_image",
+    "category": "Docker 容器",
+    "title": "离线导出与导入 Docker 镜像包",
+    "desc": "将镜像保存为单个 tar 压缩包以便在离线/无网络环境下快速分发与加载",
+    "template": "docker save -o {tar_file} {image_name}:{image_tag} && docker load -i {tar_file}",
+    "params": [
+      {
+        "key": "tar_file",
+        "label": "导出文件路径",
+        "type": "text",
+        "default": "app_image.tar",
+        "placeholder": "app_image.tar"
+      },
+      {
+        "key": "image_name",
+        "label": "镜像名称",
+        "type": "text",
+        "default": "app-service",
+        "placeholder": "app-service"
+      },
+      {
+        "key": "image_tag",
+        "label": "镜像标签 Tag",
+        "type": "text",
+        "default": "latest",
+        "placeholder": "latest"
+      }
+    ],
+    "example": "docker save -o app_image.tar app-service:latest && docker load -i app_image.tar",
+    "dangerLevel": "normal",
+    "tags": ["docker", "image", "save", "load", "离线部署"]
+  },
+  {
+    "id": "docker_run_resource_limit",
+    "category": "Docker 容器",
+    "title": "带资源限制与自启动策略运行 Docker 容器",
+    "desc": "生产级安全运行容器：限制内存上限、端口映射、数据卷挂载与故障自愈",
+    "template": "docker run -d --name {container_name} -p {host_port}:{container_port} -m {mem_limit} --memory-swap {mem_limit} -v {host_vol}:{container_vol} --restart={restart_policy} {image_name}:{image_tag}",
+    "params": [
+      {
+        "key": "container_name",
+        "label": "容器名称",
+        "type": "text",
+        "default": "app-backend",
+        "placeholder": "app-backend"
+      },
+      {
+        "key": "host_port",
+        "label": "宿主机端口",
+        "type": "text",
+        "default": "8080",
+        "placeholder": "8080"
+      },
+      {
+        "key": "container_port",
+        "label": "容器内端口",
+        "type": "text",
+        "default": "8080",
+        "placeholder": "8080"
+      },
+      {
+        "key": "mem_limit",
+        "label": "内存限制上限",
+        "type": "text",
+        "default": "1024m",
+        "placeholder": "1024m"
+      },
+      {
+        "key": "host_vol",
+        "label": "宿主机挂载目录",
+        "type": "text",
+        "default": "/opt/app/logs",
+        "placeholder": "/opt/app/logs"
+      },
+      {
+        "key": "container_vol",
+        "label": "容器内目录",
+        "type": "text",
+        "default": "/app/logs",
+        "placeholder": "/app/logs"
+      },
+      {
+        "key": "restart_policy",
+        "label": "自启动策略",
+        "type": "select",
+        "default": "always",
+        "options": [
+          { "label": "总是自启 (always)", "value": "always" },
+          { "label": "非正常退出时自启 (unless-stopped)", "value": "unless-stopped" },
+          { "label": "不自启 (no)", "value": "no" }
+        ]
+      },
+      {
+        "key": "image_name",
+        "label": "镜像名称",
+        "type": "text",
+        "default": "app-backend",
+        "placeholder": "app-backend"
+      },
+      {
+        "key": "image_tag",
+        "label": "镜像版本",
+        "type": "text",
+        "default": "v1.0.0",
+        "placeholder": "v1.0.0"
+      }
+    ],
+    "example": "docker run -d --name app-backend -p 8080:8080 -m 1024m --memory-swap 1024m -v /opt/app/logs:/app/logs --restart=always app-backend:v1.0.0",
+    "dangerLevel": "normal",
+    "tags": ["docker", "run", "资源限制", "部署", "容器"]
+  },
+  {
+    "id": "docker_update_restart",
+    "category": "Docker 容器",
+    "title": "修改已有容器的开机自启动策略",
+    "desc": "无需重新创建容器，直接热更新容器的 restart 策略",
+    "template": "docker update --restart={policy} {container_name}",
+    "params": [
+      {
+        "key": "policy",
+        "label": "重启策略",
+        "type": "select",
+        "default": "always",
+        "options": [
+          { "label": "开机/崩溃自启 (always)", "value": "always" },
+          { "label": "关闭自启 (no)", "value": "no" }
+        ]
+      },
+      {
+        "key": "container_name",
+        "label": "容器名或 ID",
+        "type": "text",
+        "default": "app-backend",
+        "placeholder": "app-backend"
+      }
+    ],
+    "example": "docker update --restart=always app-backend",
+    "dangerLevel": "normal",
+    "tags": ["docker", "update", "restart", "自启动"]
+  },
+  {
+    "id": "docker_cp_transfer",
+    "category": "Docker 容器",
+    "title": "宿主机与容器之间双向复制文件",
+    "desc": "使用 docker cp 在宿主机与运行中容器之间快速拷贝文件或目录",
+    "template": "docker cp {src_path} {dest_path}",
+    "params": [
+      {
+        "key": "src_path",
+        "label": "源路径 (宿主机路径或 容器名:路径)",
+        "type": "text",
+        "default": "./config/application.yml",
+        "placeholder": "./config.yml"
+      },
+      {
+        "key": "dest_path",
+        "label": "目标路径 (宿主机路径或 容器名:路径)",
+        "type": "text",
+        "default": "app-backend:/app/config/application.yml",
+        "placeholder": "app-backend:/app/config/"
+      }
+    ],
+    "example": "docker cp ./config/application.yml app-backend:/app/config/application.yml",
+    "dangerLevel": "normal",
+    "tags": ["docker", "cp", "文件传输", "拷贝"]
+  },
+
+  {
+    "id": "k8s_force_delete_pod",
+    "category": "Kubernetes (K8s)",
+    "title": "强制清理卡死在 Terminating 状态的 Pod",
+    "desc": "使用 --grace-period=0 和 --force 强制从 etcd 移除卡死的 Pod 实例",
+    "template": "kubectl delete pod {pod_name} -n {namespace} --grace-period=0 --force",
+    "params": [
+      {
+        "key": "pod_name",
+        "label": "Pod 实例名称",
+        "type": "text",
+        "default": "app-backend-7b94c5b4df-8z2kx",
+        "placeholder": "pod-name"
+      },
+      {
+        "key": "namespace",
+        "label": "命名空间 (Namespace)",
+        "type": "text",
+        "default": "default",
+        "placeholder": "default"
+      }
+    ],
+    "example": "kubectl delete pod app-backend-7b94c5b4df-8z2kx -n default --grace-period=0 --force",
+    "dangerLevel": "warning",
+    "tags": ["k8s", "kubectl", "delete", "terminating", "pod", "强制删除"]
+  },
+  {
+    "id": "k8s_port_forward",
+    "category": "Kubernetes (K8s)",
+    "title": "本地端口转发直连 K8s Service / Pod 调试",
+    "desc": "建立本地端口与集群内 Service/Pod 的隧道，免去配置 Ingress",
+    "template": "kubectl port-forward {target_type}/{target_name} {local_port}:{remote_port} -n {namespace}",
+    "params": [
+      {
+        "key": "target_type",
+        "label": "目标类型",
+        "type": "select",
+        "default": "svc",
+        "options": [
+          { "label": "Service (svc)", "value": "svc" },
+          { "label": "Pod (pod)", "value": "pod" }
+        ]
+      },
+      {
+        "key": "target_name",
+        "label": "Service / Pod 名称",
+        "type": "text",
+        "default": "app-backend-svc",
+        "placeholder": "app-backend-svc"
+      },
+      {
+        "key": "local_port",
+        "label": "本地监听端口",
+        "type": "text",
+        "default": "8080",
+        "placeholder": "8080"
+      },
+      {
+        "key": "remote_port",
+        "label": "集群远程端口",
+        "type": "text",
+        "default": "8080",
+        "placeholder": "8080"
+      },
+      {
+        "key": "namespace",
+        "label": "命名空间",
+        "type": "text",
+        "default": "default",
+        "placeholder": "default"
+      }
+    ],
+    "example": "kubectl port-forward svc/app-backend-svc 8080:8080 -n default",
+    "dangerLevel": "normal",
+    "tags": ["k8s", "kubectl", "port-forward", "调试", "端口映射"]
+  },
+
+  {
+    "id": "git_amend_msg",
+    "category": "Git 版本控制",
+    "title": "修改最后一次 Commit 的提交信息或作者",
+    "desc": "在未推送前快速修改上一次提交的说明文字，或更正 Author 邮箱",
+    "template": "git commit --amend -m '{new_message}'",
+    "params": [
+      {
+        "key": "new_message",
+        "label": "新的提交信息",
+        "type": "text",
+        "default": "fix: 修复生产环境下数据同步延迟问题",
+        "placeholder": "fix: 修复生产环境下数据同步延迟问题"
+      }
+    ],
+    "example": "git commit --amend -m 'fix: 修复生产环境下数据同步延迟问题'",
+    "dangerLevel": "normal",
+    "tags": ["git", "commit", "amend", "修改提交", "版本控制"]
+  },
+  {
+    "id": "git_reset_hard_remote",
+    "category": "Git 版本控制",
+    "title": "丢弃本地所有提交与修改，强制同步远程分支",
+    "desc": "彻底重置当前工作区与历史，使其与远程目标分支保持完全一致",
+    "template": "git fetch {remote_name} && git reset --hard {remote_name}/{branch_name}",
+    "params": [
+      {
+        "key": "remote_name",
+        "label": "远程仓库名",
+        "type": "text",
+        "default": "origin",
+        "placeholder": "origin"
+      },
+      {
+        "key": "branch_name",
+        "label": "远程分支名",
+        "type": "text",
+        "default": "main",
+        "placeholder": "main"
+      }
+    ],
+    "example": "git fetch origin && git reset --hard origin/main",
+    "dangerLevel": "danger",
+    "tags": ["git", "reset", "fetch", "hard", "强制同步", "放弃本地"]
+  },
+  {
+    "id": "git_undo_last_commit_soft",
+    "category": "Git 版本控制",
+    "title": "撤销最后一次 Commit (保留已暂存的修改)",
+    "desc": "将 HEAD 回退到上一次提交前，改动内容仍保存在暂存区中，方便重新编辑提交",
+    "template": "git reset --soft HEAD~1",
+    "params": [],
+    "example": "git reset --soft HEAD~1",
+    "dangerLevel": "normal",
+    "tags": ["git", "reset", "soft", "撤销提交"]
+  },
+  {
+    "id": "git_stash_with_msg",
+    "category": "Git 版本控制",
+    "title": "暂存当前工作区改动并记录描述信息",
+    "desc": "将未提交的代码安全保存到 stash 栈中，支持命名以便后续辨识与恢复",
+    "template": "git stash push -m '{stash_desc}'",
+    "params": [
+      {
+        "key": "stash_desc",
+        "label": "暂存备注信息",
+        "type": "text",
+        "default": "临时切换分支修复线上紧急 Bug",
+        "placeholder": "临时切换分支修复线上紧急 Bug"
+      }
+    ],
+    "example": "git stash push -m '临时切换分支修复线上紧急 Bug'",
+    "dangerLevel": "normal",
+    "tags": ["git", "stash", "暂存", "工作区"]
+  },
+  {
+    "id": "git_clean_untracked",
+    "category": "Git 版本控制",
+    "title": "清理工作区所有未跟踪的文件与目录",
+    "desc": "移除未加入版本控制的临时文件，带预览模式防止误删",
+    "template": "git clean -fd{dry_run_flag}",
+    "params": [
+      {
+        "key": "dry_run",
+        "label": "安全试运行模式 (仅列出将被删除的文件，不实际删除)",
+        "type": "checkbox",
+        "default": true
+      }
+    ],
+    "example": "git clean -fdn",
+    "dangerLevel": "warning",
+    "tags": ["git", "clean", "清理", "未跟踪文件"]
+  },
+
+  {
+    "id": "redis_bigkeys_scan",
+    "category": "Redis 缓存",
+    "title": "生产环境大 Key (BigKeys) 无阻塞安全扫描",
+    "desc": "使用 SCAN 游标机制遍历全库统计各数据结构占用最大的 Key，不阻塞业务",
+    "template": "redis-cli -h {host} -p {port}{auth_opt} --bigkeys",
+    "params": [
+      {
+        "key": "host",
+        "label": "Redis 主机地址",
+        "type": "text",
+        "default": "127.0.0.1",
+        "placeholder": "127.0.0.1"
+      },
+      {
+        "key": "port",
+        "label": "Redis 端口号",
+        "type": "text",
+        "default": "6379",
+        "placeholder": "6379"
+      },
+      {
+        "key": "use_auth",
+        "label": "使用密码认证",
+        "type": "checkbox",
+        "default": false
+      },
+      {
+        "key": "auth_pwd",
+        "label": "Redis 密码",
+        "type": "text",
+        "default": "YourStrongPassword",
+        "placeholder": "password"
+      }
+    ],
+    "example": "redis-cli -h 127.0.0.1 -p 6379 --bigkeys",
+    "dangerLevel": "normal",
+    "tags": ["redis", "bigkeys", "大key", "缓存排障", "内存分析"]
+  },
+  {
+    "id": "redis_monitor_grep",
+    "category": "Redis 缓存",
+    "title": "实时监听 Redis 执行指令流并过滤特定 Key",
+    "desc": "动态监控 Redis 实时处理的读写命令，带 grep 过滤特定业务前缀",
+    "template": "redis-cli -h {host} -p {port} monitor | grep --line-buffered '{key_prefix}'",
+    "params": [
+      {
+        "key": "host",
+        "label": "Redis 主机",
+        "type": "text",
+        "default": "127.0.0.1",
+        "placeholder": "127.0.0.1"
+      },
+      {
+        "key": "port",
+        "label": "Redis 端口",
+        "type": "text",
+        "default": "6379",
+        "placeholder": "6379"
+      },
+      {
+        "key": "key_prefix",
+        "label": "关注的 Key 业务前缀",
+        "type": "text",
+        "default": "user:session:",
+        "placeholder": "user:session:"
+      }
+    ],
+    "example": "redis-cli -h 127.0.0.1 -p 6379 monitor | grep --line-buffered 'user:session:'",
+    "dangerLevel": "warning",
+    "tags": ["redis", "monitor", "grep", "流量排查", "热点key"]
+  },
+
+  {
+    "id": "openssl_self_signed_cert",
+    "category": "Nginx & 安全证书",
+    "title": "OpenSSL 一键免交互生成自签名 SSL/TLS 证书",
+    "desc": "生成有效期 10 年 (3650 天) 的 2048 位私钥与自签名 crt 证书文件",
+    "template": "openssl req -x509 -nodes -days {days} -newkey rsa:{key_size} -keyout {key_file} -out {crt_file} -subj \"/C=CN/ST=State/L=City/O=DevOps/CN={domain_name}\"",
+    "params": [
+      {
+        "key": "days",
+        "label": "有效天数",
+        "type": "text",
+        "default": "3650",
+        "placeholder": "3650"
+      },
+      {
+        "key": "key_size",
+        "label": "RSA 密钥长度",
+        "type": "select",
+        "default": "2048",
+        "options": [
+          { "label": "2048 位 (标准推荐)", "value": "2048" },
+          { "label": "4096 位 (高安全性)", "value": "4096" }
+        ]
+      },
+      {
+        "key": "domain_name",
+        "label": "绑定域名或 IP (CN)",
+        "type": "text",
+        "default": "api.example.com",
+        "placeholder": "api.example.com"
+      },
+      {
+        "key": "key_file",
+        "label": "私钥输出文件名",
+        "type": "text",
+        "default": "server.key",
+        "placeholder": "server.key"
+      },
+      {
+        "key": "crt_file",
+        "label": "证书输出文件名",
+        "type": "text",
+        "default": "server.crt",
+        "placeholder": "server.crt"
+      }
+    ],
+    "example": "openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -subj \"/C=CN/ST=State/L=City/O=DevOps/CN=api.example.com\"",
+    "dangerLevel": "normal",
+    "tags": ["nginx", "openssl", "ssl", "tls", "https", "自签名证书", "证书生成"]
+  },
+  {
+    "id": "nginx_reverse_proxy_block",
+    "category": "Nginx & 安全证书",
+    "title": "Nginx 标准反向代理与真实 IP 传递配置块",
+    "desc": "生成包含 Host、X-Real-IP、X-Forwarded-For 及 WebSocket Upgrade 的反代块",
+    "template": "location {location_path} {\n    proxy_pass {upstream_url};\n    proxy_set_header Host $host;\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    proxy_set_header X-Forwarded-Proto $scheme;\n    proxy_http_version 1.1;\n    proxy_set_header Upgrade $http_upgrade;\n    proxy_set_header Connection \"upgrade\";\n    proxy_connect_timeout {timeout}s;\n    proxy_read_timeout {timeout}s;\n}",
+    "params": [
+      {
+        "key": "location_path",
+        "label": "匹配路径",
+        "type": "text",
+        "default": "/api/",
+        "placeholder": "/api/"
+      },
+      {
+        "key": "upstream_url",
+        "label": "上游服务集群 / IP:端口",
+        "type": "text",
+        "default": "http://127.0.0.1:8080",
+        "placeholder": "http://127.0.0.1:8080"
+      },
+      {
+        "key": "timeout",
+        "label": "连接与读取超时 (秒)",
+        "type": "text",
+        "default": "60",
+        "placeholder": "60"
+      }
+    ],
+    "example": "location /api/ {\n    proxy_pass http://127.0.0.1:8080;\n    proxy_set_header Host $host;\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    proxy_set_header X-Forwarded-Proto $scheme;\n    proxy_http_version 1.1;\n    proxy_set_header Upgrade $http_upgrade;\n    proxy_set_header Connection \"upgrade\";\n    proxy_connect_timeout 60s;\n    proxy_read_timeout 60s;\n}",
+    "dangerLevel": "normal",
+    "tags": ["nginx", "proxy_pass", "反向代理", "websocket", "网关"]
+  },
+  {
+    "id": "nginx_test_and_reload",
+    "category": "Nginx & 安全证书",
+    "title": "Nginx 检查配置文件语法并平滑热重载",
+    "desc": "在不停机不中断现有连接的前提下测试语法并热加载最新配置",
+    "template": "nginx -t && nginx -s reload",
+    "params": [],
+    "example": "nginx -t && nginx -s reload",
+    "dangerLevel": "normal",
+    "tags": ["nginx", "reload", "平滑重启", "热重载"]
+  },
+
+  {
+    "id": "powershell_kill_port",
+    "category": "Windows & PowerShell",
+    "title": "PowerShell 查找占用指定端口的进程并强制释放",
+    "desc": "通过 Get-NetTCPConnection 查找监听端口的 OwningProcess 并调用 Stop-Process",
+    "template": "Get-NetTCPConnection -LocalPort {port} -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }",
+    "params": [
+      {
+        "key": "port",
+        "label": "端口号",
+        "type": "text",
+        "default": "8080",
+        "placeholder": "8080"
+      }
+    ],
+    "example": "Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }",
+    "dangerLevel": "warning",
+    "tags": ["powershell", "windows", "端口占用", "kill", "进程"]
+  }
+]

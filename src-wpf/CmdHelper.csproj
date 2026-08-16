@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net462</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>annotations</Nullable>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>CmdHelper</AssemblyName>
+    <RootNamespace>CmdHelper</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.46">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\data\commands.json" Link="commands.json" />
+    <EmbeddedResource Include="..\web-singlefile\index.html" Link="template.html" />
+  </ItemGroup>
+
+  <Target Name="ILRepack" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)$(TargetName)$(TargetExt)" />
+      <InputAssemblies Include="$(OutputPath)*.dll" />
+    </ItemGroup>
+    <ILRepack
+        Parallel="true"
+        Internalize="false"
+        InputAssemblies="@(InputAssemblies)"
+        TargetKind="WinExe"
+        OutputFile="$(OutputPath)CmdHelper_Portable.exe"
+    />
+  </Target>
+</Project>

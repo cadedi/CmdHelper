@@ -1,0 +1,45 @@
+## ====================================================================
+##  Git Ignore Rules for LinuxCmdHelper (C# .NET & Avalonia & Web)
+## ====================================================================
+
+# Build results & Binaries
+[Bb]in/
+[Oo]bj/
+[Rr]elease/
+release/
+artifacts/
+[Ll]og/
+[Ll]ogs/
+*.log
+
+# Visual Studio & IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+*.dbmdl
+*.jfm
+
+# Runtime / Local Cache / Test Data
+cache_*.json
+app_settings.json
+data_sources.json
+test_*.html
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dotnet Core artifacts
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider
+*.sln.iml

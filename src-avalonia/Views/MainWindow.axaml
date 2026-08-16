@@ -1,0 +1,243 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="using:LinuxCmdHelper.Models"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="LinuxCmdHelper.Views.MainWindow"
+        Title="极速命令助手 - Linux / SQL / Docker / K8s / Git 场景化速查与参数拼接"
+        Width="1260" Height="820" MinWidth="1050" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI, Microsoft YaHei, PingFang SC, -apple-system, sans-serif"
+        RenderOptions.TextRenderingMode="Antialias"
+        Background="{DynamicResource AppBackground}"
+        Foreground="{DynamicResource TextPrimary}">
+
+    <Window.Styles>
+        <Style Selector="Button.headerBtn">
+            <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.headerBtn:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
+            <Setter Property="Background" Value="{DynamicResource SidebarBackground}"/>
+        </Style>
+
+        <Style Selector="Button.primaryBtn">
+            <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.primaryBtn:pointerover">
+            <Setter Property="Background" Value="{DynamicResource AccentHover}"/>
+        </Style>
+
+        <Style Selector="TextBlock.paramLabel">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+        </Style>
+        <Style Selector="TextBlock.mutedText">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextMuted}"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="60, *">
+        <!-- 1. 顶部导航栏 -->
+        <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1" Padding="16,0">
+            <Grid ColumnDefinitions="Auto, *, Auto" VerticalAlignment="Center">
+                <!-- 品牌标志 -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
+                    <Border Width="34" Height="34" CornerRadius="8" Background="{DynamicResource AccentColor}">
+                        <TextBlock Text="CMD" FontWeight="Bold" FontSize="13" Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock x:Name="TxtBrandTitle" Text="极速命令助手" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- 中央搜索框 (流式自适应宽度) -->
+                <Grid Grid.Column="1" HorizontalAlignment="Stretch" MaxWidth="360" Margin="16,0">
+                    <TextBox x:Name="TxtSearch" Height="36" CornerRadius="6" VerticalContentAlignment="Center" Padding="10,0" Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1"/>
+                    <Border HorizontalAlignment="Right" Background="{DynamicResource SidebarBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="0,0,8,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <TextBlock Text="Ctrl+F" FontSize="10" Foreground="{DynamicResource TextMuted}"/>
+                    </Border>
+                </Grid>
+
+                <!-- 右侧操作工具栏 -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+                    <!-- 语言切换 -->
+                    <Button x:Name="BtnLangToggle" Classes="headerBtn" Content="🌐 中文" ToolTip.Tip="切换语言 / Switch Language"/>
+                    <!-- 主题切换 -->
+                    <Button x:Name="BtnThemeToggle" Classes="headerBtn" Content="🌓 浅色" ToolTip.Tip="切换深色/浅色模式"/>
+                    <!-- 导出单文件 HTML -->
+                    <Button x:Name="BtnExportHtml" Classes="headerBtn" Content="📤 导出 Web 版" ToolTip.Tip="将当前全量命令库导出为独立的单文件 HTML (跨平台任意浏览器秒开)"/>
+                    <!-- 快速同步 -->
+                    <Button x:Name="BtnQuickSync" Classes="headerBtn" Content="🔄 刷新/同步" ToolTip.Tip="同步所有启用的远程数据源"/>
+                    <!-- 数据源配置 -->
+                    <Button x:Name="BtnDataSources" Classes="headerBtn" Content="📡 数据源配置" ToolTip.Tip="配置外部/远程 JSON 接口数据源"/>
+                    <!-- 重置参数 -->
+                    <Button x:Name="BtnReset" Classes="headerBtn" Content="重置参数" ToolTip.Tip="将当前命令的所有参数还原为默认值"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 2. 核心三栏主体 -->
+        <Grid Grid.Row="1" ColumnDefinitions="240, 360, *">
+            <!-- 2.1 左侧场景分类列表 -->
+            <Border Grid.Column="0" Background="{DynamicResource SidebarBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,1,0">
+                <Grid RowDefinitions="Auto, *">
+                    <TextBlock x:Name="TxtCategoryHeader" Grid.Row="0" Text="场景分类" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMuted}" Margin="16,14,16,8"/>
+                    <ListBox x:Name="LstCategories" Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="6,0">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="12,10"/>
+                                <Setter Property="CornerRadius" Value="6"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="models:CategoryItemVM">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <TextBlock Grid.Column="0" Text="{Binding DisplayName}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                                    <Border Grid.Column="1" Background="{DynamicResource BorderSubtle}" CornerRadius="10" Padding="6,2" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Count}" FontSize="11" Foreground="{DynamicResource TextMuted}"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- 2.2 中间需求场景列表 -->
+            <Border Grid.Column="1" Background="{DynamicResource AppBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,1,0">
+                <Grid RowDefinitions="Auto, *">
+                    <Border Grid.Row="0" Background="{DynamicResource AppBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1" Padding="14,12">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBlock x:Name="TxtCategoryTitle" Grid.Column="0" Text="全部需求场景" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMuted}"/>
+                            <TextBlock x:Name="TxtCategoryCount" Grid.Column="1" Text="共 0 条" FontSize="12" Foreground="{DynamicResource TextMuted}"/>
+                        </Grid>
+                    </Border>
+
+                    <ListBox x:Name="LstCommands" Grid.Row="1" Background="Transparent" BorderThickness="0" Padding="8">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0,0,0,8"/>
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="models:CommandItem">
+                                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1" CornerRadius="8" Padding="14">
+                                    <StackPanel Spacing="6">
+                                        <Grid ColumnDefinitions="*, Auto">
+                                            <TextBlock Grid.Column="0" Text="{Binding Title}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap"/>
+                                            <Border Grid.Column="1" Background="{DynamicResource DangerBg}" BorderBrush="{DynamicResource DangerBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2" IsVisible="{Binding IsDanger}">
+                                                <TextBlock Text="高危/删除" FontSize="10" Foreground="{DynamicResource DangerText}" FontWeight="Bold"/>
+                                            </Border>
+                                            <Border Grid.Column="1" Background="{DynamicResource WarningBg}" BorderBrush="{DynamicResource WarningBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2" IsVisible="{Binding IsWarning}">
+                                                <TextBlock Text="注意" FontSize="10" Foreground="{DynamicResource WarningText}" FontWeight="Bold"/>
+                                            </Border>
+                                        </Grid>
+                                        <TextBlock Text="{Binding Desc}" FontSize="12" Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap" MaxLines="2"/>
+                                        <Border Background="{DynamicResource CodeBg}" BorderBrush="{DynamicResource BorderSubtle}" BorderThickness="1" CornerRadius="4" Padding="8,4">
+                                            <TextBlock Text="{Binding DisplayPreview}" FontSize="11" FontFamily="Cascadia Code, Consolas, Courier New" Foreground="{DynamicResource TextMuted}" TextTrimming="CharacterEllipsis"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- 2.3 右侧参数配置与命令组装面板 -->
+            <ScrollViewer Grid.Column="2" Background="{DynamicResource AppBackground}" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="24,20" Spacing="16">
+                    <!-- 需求说明头部 -->
+                    <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="10" Padding="20">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Border Background="{DynamicResource ActiveItemBg}" BorderBrush="{DynamicResource ActiveItemBorder}" BorderThickness="1" CornerRadius="6" Padding="8,3">
+                                    <TextBlock x:Name="TxtDetailCategory" Text="分类" FontSize="11" Foreground="{DynamicResource AccentColor}" FontWeight="SemiBold"/>
+                                </Border>
+                                <Border x:Name="BorderDangerWarning" Background="{DynamicResource DangerBg}" BorderBrush="{DynamicResource DangerBorder}" BorderThickness="1" CornerRadius="6" Padding="8,3" IsVisible="False">
+                                    <TextBlock x:Name="TxtDangerWarning" Text="危险操作" FontSize="11" Foreground="{DynamicResource DangerText}" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                            <TextBlock x:Name="TxtDetailTitle" Text="请在左侧选择一个需求场景" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="TxtDetailDesc" Text="选择需求后，可在下方调节参数并一键拷贝实时拼接的命令。" FontSize="13" Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap" LineHeight="20"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 实时动态拼接命令框与复制 -->
+                    <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="10" Padding="18">
+                        <StackPanel Spacing="10">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBlock x:Name="TxtRealtimeTitle" Grid.Column="0" Text="实时拼接命令 (点击一键复制)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMuted}" VerticalAlignment="Center"/>
+                                <Button x:Name="BtnCopyCommand" Grid.Column="1" Classes="primaryBtn" Content="📋 复制完整命令"/>
+                            </Grid>
+                            <Border Background="{DynamicResource CodeBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                <TextBox x:Name="TxtFinalCommand" Background="Transparent" Foreground="{DynamicResource CodeText}" FontSize="14" FontFamily="Cascadia Code, Consolas, Courier New" FontWeight="SemiBold" BorderThickness="0" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="280" IsReadOnly="True" Cursor="Hand"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 动态参数配置面板 -->
+                    <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="10" Padding="20">
+                        <StackPanel Spacing="14">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Border Width="4" Height="14" Background="{DynamicResource AccentColor}" CornerRadius="2" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TxtParamConfigTitle" Text="参数动态设置 (修改后实时更新上方命令)" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <!-- 动态参数控件容器 -->
+                            <StackPanel x:Name="PnlParamControls" Spacing="12">
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 标准示例与场景说明 -->
+                    <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="10" Padding="18">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Border Width="4" Height="14" Background="{DynamicResource TextMuted}" CornerRadius="2" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TxtExampleTitle" Text="标准示例 / 场景说明" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Border Background="{DynamicResource CodeBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                <TextBlock x:Name="TxtExampleBox" Text="--" FontSize="12" FontFamily="Cascadia Code, Consolas, Courier New" Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- 3. 复制成功 Toast 浮动提示 -->
+        <Border x:Name="ToastBorder" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#059669" CornerRadius="8" Padding="16,10" Margin="0,0,30,30" IsVisible="False">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="✔ " FontWeight="Bold" FontSize="14" Foreground="#FFFFFF"/>
+                <TextBlock x:Name="TxtToastContent" Text="已成功复制命令到剪贴板！" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
