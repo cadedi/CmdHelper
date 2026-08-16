@@ -23,7 +23,7 @@
    - **Linux 原生单文件 ELF (`CmdHelper-linux-x64`)**：
      - 基于 **.NET 8 + Avalonia UI 11** 构建，自带独立运行库。
      - 在任何主流 Linux 发行版（Ubuntu、CentOS、Debian、统信 UOS、银河麒麟）上，只需 `chmod +x` 双击即可原生运行，**无需目标机预装 .NET 运行时**！
-   - **Windows 极轻量原生版 (`CmdHelper.exe`)**：
+   - **Windows 极轻量原生版 (`CmdHelper-wpf.exe`)**：
      - 专精 Windows Server 2016+ / Win10 / Win11，单文件仅 **1.1 MB**，开箱即用免装环境。
    - **单文件离线网页版 (`CmdHelper_Web.html`)**：
      - 零 CDN 外部网络依赖，100% 自包含，物理隔离内网/堡垒机浏览器秒开。
@@ -53,7 +53,7 @@
 | :--- | :--- | :--- | :--- |
 | **`CmdHelper-linux-x64`** | **Linux 全平台**<br>(Ubuntu / CentOS / Debian / 统信 UOS / 银河麒麟) | 44 MB | **Linux 原生单文件 ELF**<br>自包含 .NET 8 运行时，目标机免装任何环境，`chmod +x` 直接双击运行。支持中英切换与深浅主题。 |
 | **`CmdHelper-win-x64.exe`** | **Windows 10 / 11 / Server (x64)** | 45 MB | **Avalonia 跨平台 Windows 独立单文件版**<br>自包含运行时，支持多语言与深浅色模式即时切换。 |
-| **`CmdHelper.exe`** | **Windows Server 2016+ / 10 / 11** | **1.1 MB** | **WPF 极轻量原生单文件版**<br>基于 .NET 4.6.2，专为 Windows Server 2016 免装环境设计，内存占用仅 25MB。 |
+| **`CmdHelper-wpf.exe`** | **Windows Server 2016+ / 10 / 11** | **1.1 MB** | **WPF 极轻量原生单文件版**<br>基于 .NET 4.6.2，专为 Windows Server 2016 免装环境设计，内存占用仅 25MB。 |
 | **`CmdHelper_Web.html`** | **全平台 / 任意浏览器** | **79 KB** | **纯单文件自包含离线 Web 版**<br>零 CDN 依赖、零外部网络请求，支持多数据源管理、接口同步与一键导出。 |
 
 ---
@@ -69,7 +69,7 @@ chmod +x ./CmdHelper-linux-x64
 
 ### 2. Windows 平台
 - **通用现代环境 (推荐)**：直接双击 `release/CmdHelper-win-x64.exe`（支持多语言与深浅主题切换）。
-- **Windows Server 2016 / 极轻量便携**：直接双击 `release/CmdHelper.exe`（仅 1.1 MB，免安装任何运行库）。
+- **Windows Server 2016 / 极轻量便携**：直接双击 `release/CmdHelper-wpf.exe`（仅 1.1 MB，免安装任何运行库）。
 
 ### 3. 跨平台纯单文件离线 Web 版
 直接双击 `release/CmdHelper_Web.html` 即可在 Edge、Chrome、Firefox 等任何浏览器中离线使用。

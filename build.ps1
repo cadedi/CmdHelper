@@ -29,7 +29,7 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[2/3] 正在整理 Release 产物..." -ForegroundColor Yellow
 $binReleaseDir = Join-Path $srcWpfDir "bin\Release\net462"
 $portableExe = Join-Path $binReleaseDir "CmdHelper_Portable.exe"
-$targetExe = Join-Path $releaseDir "CmdHelper.exe"
+$targetExe = Join-Path $releaseDir "CmdHelper-wpf.exe"
 
 if (Test-Path $portableExe) {
     Copy-Item $portableExe $targetExe -Force
@@ -48,5 +48,5 @@ Copy-Item (Join-Path $rootDir "data\commands.json") (Join-Path $releaseDir "comm
 Write-Host "[3/3] 构建完成！产物位于 release 目录：" -ForegroundColor Green
 Get-ChildItem -Path $releaseDir | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize
 
-Write-Host "`n✔ 绿色单文件 EXE: release\CmdHelper.exe (兼容 Windows Server 2016+ / Win10 / Win11)" -ForegroundColor Green
+Write-Host "`n✔ 绿色单文件 EXE: release\CmdHelper-wpf.exe (兼容 Windows Server 2016+ / Win10 / Win11)" -ForegroundColor Green
 Write-Host "✔ 离线单文件 Web: release\CmdHelper_Web.html (任意浏览器秒开)`n" -ForegroundColor Green

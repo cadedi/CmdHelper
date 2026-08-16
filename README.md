@@ -46,7 +46,7 @@ Comprehensive scenarios covered:
 - **Linux Native Single-File ELF (`CmdHelper-linux-x64`)**:
   - Built with **.NET 8 + Avalonia UI 11**.
   - **Self-contained**: target Linux machines (Ubuntu, Debian, CentOS, RHEL, Kylin, UOS) **do not need .NET runtime installed**. Just `chmod +x` and run!
-- **Windows Ultra-Lightweight Native (`CmdHelper.exe`)**:
+- **Windows Ultra-Lightweight Native (`CmdHelper-wpf.exe`)**:
   - Only **1.1 MB** single-file EXE based on .NET Framework 4.6.2 (pre-installed on Windows Server 2016+).
 - **Offline Single-File Web App (`CmdHelper_Web.html`)**:
   - 100% self-contained Vanilla HTML5/CSS3/JS with **zero external CDN dependencies**, built for air-gapped server environments and jump boxes.
@@ -76,7 +76,7 @@ Comprehensive scenarios covered:
 | :--- | :--- | :--- | :--- |
 | **`CmdHelper-linux-x64`** | **Linux (x64)**<br>(Ubuntu / Debian / CentOS / Kylin / UOS) | ~44 MB | **Linux Native Single-File ELF**<br>Self-contained runtime; zero pre-requisites; supports i18n & Dark/Light themes. |
 | **`CmdHelper-win-x64.exe`** | **Windows 10 / 11 / Server (x64)** | ~45 MB | **Avalonia Native Windows Edition**<br>Self-contained runtime with full theme and multi-language support. |
-| **`CmdHelper.exe`** | **Windows Server 2016+ / 10 / 11** | **1.1 MB** | **Ultra-Lightweight WPF Edition**<br>Zero installation, instant cold start (<200ms), 25MB RAM usage. |
+| **`CmdHelper-wpf.exe`** | **Windows Server 2016+ / 10 / 11** | **1.1 MB** | **Ultra-Lightweight WPF Edition**<br>Zero installation, instant cold start (<200ms), 25MB RAM usage. |
 | **`CmdHelper_Web.html`** | **All Platforms / Any Browser** | **~79 KB** | **Pure Offline Single-File HTML**<br>Zero CDN, zero network requests, instant startup in air-gapped environments. |
 
 ---
@@ -92,7 +92,7 @@ chmod +x ./CmdHelper-linux-x64
 
 ### Windows
 - **Modern Windows (Recommended)**: Run `release/CmdHelper-win-x64.exe`
-- **Windows Server 2016+ (Zero-Dep Portable)**: Run `release/CmdHelper.exe`
+- **Windows Server 2016+ (Zero-Dep Portable)**: Run `release/CmdHelper-wpf.exe`
 
 ### Offline Browser
 Open `release/CmdHelper_Web.html` directly in Edge, Chrome, Safari, or Firefox.
